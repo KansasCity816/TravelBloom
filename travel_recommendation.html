@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Bloom</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            padding: 10px 0;
+        }
+
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-align: center;
+            text-decoration: none;
+            float: left;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .search-bar {
+            float: right;
+            padding: 10px;
+        }
+
+        .home-page {
+            background-image: url('/travelRecommendation/home-background.jpg');
+            background-size: cover;
+            height: 500px;
+            text-align: center;
+            color: white;
+            padding-top: 100px;
+        }
+
+        .social-icons {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .social-icons img {
+            width: 40px;
+            margin: 10px 0;
+        }
+
+        .home-page h1 {
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .home-page p {
+            font-size: 24px;
+            margin-block-start: 2em;
+            margin-block-end: 3em;
+            margin-inline-start: 150px;
+            margin-inline-end: 150px;
+        }
+
+        .clear-btn {
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .clear-btn:hover {
+            background-color: darkred;
+        }
+
+        .book-now {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .book-now:hover {
+            background-color: #45a049;
+        }
+
+        .search-box {
+            margin: 0 20px;
+            padding: 10px;
+            border: none;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .recommendations {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .recommendation-item {
+            width: 200px;
+            text-align: center;
+            margin: 10px;
+        }
+
+        .recommendation-item img {
+            width: 100%;
+            height: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="/travelRecommendation/travel_recommendation.html">Home</a>
+        <a href="/travelRecommendation/about.html">About Us</a>
+        <a href="/travelRecommendation/contact.html">Contact Us</a>
+        <div class="search-bar">
+            <input type="text" class="search-box" id="searchKeyword" placeholder="Search for recommendations...">
+            <button id="searchBtn">Search</button>
+            <button id="clearBtn" class="clear-btn">Clear</button>
+        </div>
+    </div>
+
+    <!-- Social Media Icons -->
+    <div class="social-icons">
+        <img src="/travelRecommendation/twitter-icon.jpg" alt="Twitter">
+        <img src="/travelRecommendation/facebook-icon.png" alt="Facebook">
+        <img src="/travelRecommendation/instagram-icon.jpg" alt="Instagram">
+    </div>
+
+    <!-- Home Page -->
+    <div class="home-page">
+        <h1>Explore Dream Destination</h1>
+        <p>It encourages exploration of unfamiliar territories, embracing diverse cultures and landscapes, while pursuing the desired destination that captivates the heart and ignites a sense of wonder.</p>
+        <button class="book-now">Book Now</button>
+    </div>
+
+    <!-- Recommendations Section -->
+    <div id="recommendations" class="recommendations">
+        <!-- Recommendations will be dynamically inserted here -->
+    </div>
+
+    <script>
+        // Fetch data from JSON file
+        async function fetchRecommendations() {
+            try {
+                const response = await fetch('/travelRecommendation/travel_recommendation_api.json');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return [];
+            }
+        }
+
+        // Display recommendations
+        function displayRecommendations(recommendations) {
+            const recommendationsContainer = document.getElementById('recommendations');
+            recommendationsContainer.innerHTML = ''; // Clear previous results
+
+            recommendations.forEach(item => {
+                const recommendationElement = document.createElement('div');
+                recommendationElement.classList.add('recommendation-item');
+                recommendationElement.innerHTML = `
+                    <img src="${item.imageUrl}" alt="${item.name}">
+                    <h3>${item.name}</h3>
+                    <p>${item.description}</p>
+                `;
+                recommendationsContainer.appendChild(recommendationElement);
+            });
+        }
+
+        // Search button logic
+        document.getElementById('searchBtn').addEventListener('click', async function () {
+            const keyword = document.getElementById('searchKeyword').value.toLowerCase();
+            const data = await fetchRecommendations();
+            let filteredRecommendations = [];
+
+            // Check which category (beach, temple, country) the keyword matches
+            if (keyword === 'beach' || keyword === 'beaches') {
+                filteredRecommendations = data.beaches;
+            } else if (keyword === 'temple' || keyword === 'temples') {
+                filteredRecommendations = data.temples;
+            } else if (keyword === 'country' || keyword === 'countries') {
+                filteredRecommendations = data.countries.flatMap(country => country.cities);
+            }
+
+            // Display the filtered recommendations
+            displayRecommendations(filteredRecommendations);
+        });
+
+        // Clear button logic
+        document.getElementById('clearBtn').addEventListener('click', function () {
+            document.getElementById('searchKeyword').value = '';
+            document.getElementById('recommendations').innerHTML = '';
+        });
+
+    </script>  
+</body>
+
+</html>
