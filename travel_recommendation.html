@@ -128,9 +128,9 @@
 <body>
     <!-- Navbar -->
     <div class="navbar">
-        <a href="/travelRecommendation/travel_recommendation.html">Home</a>
-        <a href="/travelRecommendation/about.html">About Us</a>
-        <a href="/travelRecommendation/contact.html">Contact Us</a>
+        <a href="/TravelBloom/travel_recommendation.html">Home</a>
+        <a href="/TravelBloom/about.html">About Us</a>
+        <a href="/TravelBloom/contact.html">Contact Us</a>
         <div class="search-bar">
             <input type="text" class="search-box" id="searchKeyword" placeholder="Search for recommendations...">
             <button id="searchBtn">Search</button>
@@ -140,9 +140,9 @@
 
     <!-- Social Media Icons -->
     <div class="social-icons">
-        <img src="/travelRecommendation/twitter-icon.jpg" alt="Twitter">
-        <img src="/travelRecommendation/facebook-icon.png" alt="Facebook">
-        <img src="/travelRecommendation/instagram-icon.jpg" alt="Instagram">
+        <img src="/TravelBloom/twitter-icon.jpg" alt="Twitter">
+        <img src="/TravelBloom/facebook-icon.png" alt="Facebook">
+        <img src="/TravelBloom/instagram-icon.jpg" alt="Instagram">
     </div>
 
     <!-- Home Page -->
@@ -161,7 +161,7 @@
         // Fetch data from JSON file
         async function fetchRecommendations() {
             try {
-                const response = await fetch('/travelRecommendation/travel_recommendation_api.json');
+                const response = await fetch('/TravelBloom/travel_recommendation_api.json');
                 const data = await response.json();
                 return data;
             } catch (error) {
